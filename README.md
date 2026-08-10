@@ -1,4 +1,7 @@
 # Spotify-Discography-Exporter
+
+![Spotify Discography Exporter](spotify-discography-exporter-cover.png)
+
 Spotify Discography Exporter - Get a full list of every song you have on Spotify — titles, links, ISRCs, UPCs, copyright info, and more — in one spreadsheet.
 
 Overview
@@ -44,8 +47,6 @@ You'll land on your app's page — you'll see your Client ID right there
 Click "View client secret" to reveal your Client Secret
 
 Keep this tab open — you'll need to copy/paste both values in a minute.
-
--
 
 Step 2: Find your Spotify Artist ID
 
@@ -97,5 +98,3 @@ I built this for for independent artists like myself who want an easy, personal 
 Cheers!
 
 Jianda Monique
-
-Feel free to fork, modify, or share this with other artists who need the same thing.
