@@ -1,6 +1,6 @@
 """
 Spotify Discography Exporter (v2)
-------------------------------------
+-------------------------------------
 Pulls every album/single/EP + track for ANY Spotify artist and saves it
 to a CSV -- now including everything Spotify's public API actually knows
 about each release, not just the basics:
