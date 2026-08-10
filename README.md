@@ -1,7 +1,7 @@
 # Spotify-Discography-Exporter
 Spotify Discography Exporter - Get a full list of every song you have on Spotify — titles, links, ISRCs, UPCs, copyright info, and more — in one spreadsheet.
 
-What does it actually do?
+Overview
 
 If you're an artist on Spotify, this little tool asks Spotify (using your own free developer account) for a complete list of everything you've released — every album, single, and EP — and saves it as a CSV file (basically a spreadsheet) that you can open in Excel, Google Sheets, or Numbers.
 
@@ -21,7 +21,7 @@ Think of it as making your own backup/master list of your Spotify catalog — wi
 
 **Want to skip the code entirely?** If you'd rather not touch GitHub, Colab, or anything code-related, there's a point-and-click version of this same tool: [artisanalindie.com/spotify-exporter.html](https://www.artisanalindie.com/spotify-exporter.html). Paste your artist link, get your CSV — same fields as below, no setup beyond the same one-time Client ID/Secret step.
 
-A note on scope: this pulls everything Spotify's own API is willing to hand over about your public catalog. Things Spotify has no way of knowing — songwriter splits, BPM, musical key, sample clearances, lyrics status, whether you kept the stems — aren't in here, because that data doesn't live on Spotify. You'd still track those yourself, alongside this tool's output.
+A note on scope: this pulls everything Spotify's own API provides about your catalog. Things Spotify has no way of knowing — songwriter splits, BPM, musical key, sample clearances, lyrics status, whether you kept the stems — aren't in here, because that data doesn't live on Spotify. You'd still track those yourself, alongside this tool's output.
 
 Step 1: Get your free Spotify "keys" (Client ID + Secret)
 
@@ -75,7 +75,7 @@ When it's done, it'll say "Done!" and tell you where the file is. In Colab, it s
 
 If the automatic download doesn't start, click the little folder icon on the left side of Colab, find spotify_tracks.csv, click the three dots next to it, and choose Download.
 
--Troubleshooting
+-Troubleshooting and Questions
 
 "Invalid limit" error — Spotify changed some of their rules for new developer accounts in 2026. This script already accounts for that, but if Spotify changes things again and you see this error, try lowering the "limit": 10 values near the top of the script to something smaller, like 5.
 
