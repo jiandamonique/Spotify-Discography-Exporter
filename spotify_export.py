@@ -1,8 +1,17 @@
 """
-Spotify Discography Exporter
-------------------------------
+Spotify Discography Exporter (v2)
+------------------------------------
 Pulls every album/single/EP + track for ANY Spotify artist and saves it
-to a CSV -- including title, Spotify URL, and ISRC code.
+to a CSV -- now including everything Spotify's public API actually knows
+about each release, not just the basics:
+
+  title, spotify_url, isrc, album_name, album_type, release_date,
+  album_url, album_image_url, upc, copyright, duration, explicit,
+  disc_number, track_number, featured_artists
+
+Fields Spotify's API does NOT have (songwriter splits, BPM, key, sample
+clearance, lyrics status, has-stems, etc.) still need to be filled in by
+hand in your own catalog tracker -- no scraper can get those for you.
 
 HOW TO RUN (Google Colab):
 1. Paste this whole script into a Colab code cell and run it (Shift+Enter).
@@ -107,6 +116,52 @@ def get_track_isrc(track_id, token):
     return data.get("external_ids", {}).get("isrc", "")
 
 
+def get_albums_details_batch(album_ids, token):
+    """
+    UPC and copyright text only live on the FULL album object, not the
+    simplified one from artist/albums -- but Spotify lets us ask for up
+    to 20 albums at once, so this is one call per 20 releases instead of
+    one per release.
+
+    Returns {album_id: {"upc": "...", "copyright": "..."}}
+    """
+    details = {}
+    headers = {"Authorization": f"Bearer {token}"}
+    batch_size = 20
+
+    for i in range(0, len(album_ids), batch_size):
+        batch = album_ids[i:i + batch_size]
+        resp = requests.get(
+            "https://api.spotify.com/v1/albums",
+            headers=headers,
+            params={"ids": ",".join(batch), "market": "US"},
+        )
+        if resp.status_code != 200:
+            print(f"    [!] Album batch request failed ({resp.status_code}): {resp.text}")
+            time.sleep(0.1)
+            continue
+        data = resp.json()
+        for album in data.get("albums", []):
+            if not album:
+                continue
+            upc = album.get("external_ids", {}).get("upc", "")
+            copyrights = album.get("copyrights", [])
+            copyright_text = " | ".join(c.get("text", "") for c in copyrights if c.get("text"))
+            details[album["id"]] = {"upc": upc, "copyright": copyright_text}
+        time.sleep(0.1)
+
+    return details
+
+
+def format_duration(duration_ms):
+    """34567 (ms) -> '0:34'"""
+    if not duration_ms:
+        return ""
+    total_seconds = int(duration_ms) // 1000
+    minutes, seconds = divmod(total_seconds, 60)
+    return f"{minutes}:{seconds:02d}"
+
+
 def try_colab_download(filepath):
     """If running in Google Colab, trigger an automatic browser download."""
     try:
@@ -118,8 +173,8 @@ def try_colab_download(filepath):
 
 
 def main():
-    print("Spotify Discography Exporter")
-    print("-----------------------------")
+    print("Spotify Discography Exporter (v2)")
+    print("-----------------------------------")
     client_id = input("Client ID: ").strip()
     client_secret = getpass.getpass("Client Secret (hidden as you type): ").strip()
     artist_id = input("Spotify Artist ID (from open.spotify.com/artist/...): ").strip()
@@ -134,6 +189,10 @@ def main():
     albums = get_all_albums(artist_id, token)
     print(f"Found {len(albums)} releases.")
 
+    print("Fetching UPC + copyright info for each release (batched)...")
+    album_ids = [a["id"] for a in albums]
+    album_details = get_albums_details_batch(album_ids, token)
+
     seen_track_ids = set()
     rows = []
     file_number = 1
@@ -143,6 +202,12 @@ def main():
         album_type = album["album_type"]
         release_date = album.get("release_date", "")
         album_url = album["external_urls"].get("spotify", "")
+        images = album.get("images", [])
+        album_image_url = images[0]["url"] if images else ""
+
+        extra = album_details.get(album["id"], {})
+        upc = extra.get("upc", "")
+        copyright_text = extra.get("copyright", "")
 
         print(f"  -> {album_name} ({album_type})")
         tracks = get_album_tracks(album["id"], token)
@@ -157,6 +222,8 @@ def main():
                 isrc = get_track_isrc(t["id"], token)
                 time.sleep(0.1)
 
+            featured = [a["name"] for a in t.get("artists", []) if a.get("id") != artist_id]
+
             rows.append({
                 "file_number": file_number,
                 "title": t["name"],
@@ -167,6 +234,14 @@ def main():
                 "album_type": album_type,
                 "release_date": release_date,
                 "album_url": album_url,
+                "album_image_url": album_image_url,
+                "upc": upc,
+                "copyright": copyright_text,
+                "duration": format_duration(t.get("duration_ms")),
+                "explicit": "Yes" if t.get("explicit") else "No",
+                "disc_number": t.get("disc_number", ""),
+                "track_number": t.get("track_number", ""),
+                "featured_artists": ", ".join(featured),
             })
             file_number += 1
 
@@ -175,6 +250,8 @@ def main():
         fieldnames = [
             "file_number", "title", "spotify_track_id", "spotify_url", "isrc",
             "album_name", "album_type", "release_date", "album_url",
+            "album_image_url", "upc", "copyright", "duration", "explicit",
+            "disc_number", "track_number", "featured_artists",
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
