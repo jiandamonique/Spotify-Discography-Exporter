@@ -39,7 +39,7 @@ Click "Create app"
 Fill in:
 App name: ex:  "My Music Export"
 App description: ex: Exporting my  catalog
-Redirect URI: paste in https://localhost:8888/callback (will not be used -it's  a required field)
+Redirect URL: paste in https://localhost:8888/callback (will not be used -it's  a required field)
 Which API/SDKs are you planning to use? check only "Web API"
 Agree to the Developer Terms of Service checkbox if you have not yet (you likely cannot code until you do)
 Click Save
@@ -59,19 +59,32 @@ You'll get a link that looks like mine @jiandamonique:
 The long string after /artist/ — that's your Artist ID. You'll paste that in later too.
 
 Step 3: Run the script in Google Colab (or your tool of choice)
+
 For this use case --
+
 Go to colab.research.google.com and sign in with any Google account
+
 Click "New notebook"
+
 In the first cell, paste this and press Shift+Enter:
    !pip install requests
+
 Click "+ Code" to add a new cell, then paste in the entire contents of spotify_export.py (the file in this repo)
+
 Press Shift+Enter to run it
+
 It will ask you, one at a time:
+
 Client ID → paste it in, press Enter
+
 Client Secret → paste it in, press Enter (it'll show as dots)
+
 Spotify Artist ID → paste it in, press Enter
+
 Also fetch ISRC codes? → type y if you want them (a bit slower), or just press Enter to skip
+
 Watch it work — it'll print out each album/single as it goes. It'll also grab UPC and copyright info for every release in the background (batched, so it's fast even for a big catalog).
+
 When it's done, it'll say "Done!" and tell you where the file is. In Colab, it should also automatically start downloading the CSV to your computer's Downloads folder.
 
 If the automatic download doesn't start, click the little folder icon on the left side of Colab, find spotify_tracks.csv, click the three dots next to it, and choose Download.
@@ -84,7 +97,7 @@ Nothing happens when I try to type/paste the Client Secret — Click directly in
 
 A red error message instead of a prompt — Something didn't paste correctly, or pip install requests didn't finish first. Re-run both cells in order.
 
-It says my redirect URI isn't secure — Use https://localhost:8888/callback or http://127.0.0.1:8888/callback instead of plain http://.
+It says my redirect URL isn't secure — Use https://localhost:8888/callback or http://127.0.0.1:8888/callback instead of plain http://.
 
 Is this safe? Will Spotify disallow this?
 
