@@ -37,13 +37,21 @@ Accept the Terms of Service.
 Click "Create app"  
 
 Fill in:
-App name: ex:  "My Music Export"
-App description: ex: Exporting my  catalog
+
+App name: ex: "My Music Export"
+
+App description: ex: Exporting my catalog
+
 Redirect URL: paste in https://localhost:8888/callback (will not be used -it's  a required field)
+
 Which API/SDKs are you planning to use? check only "Web API"
+
 Agree to the Developer Terms of Service checkbox if you have not yet (you likely cannot code until you do)
+
 Click Save
+
 You'll land on your app's page — you'll see your Client ID right there
+
 Click "View client secret" to reveal your Client Secret
 
 Keep this tab open — you'll need to copy/paste both values in a minute.
@@ -53,9 +61,12 @@ Step 2: Find your Spotify Artist ID
 This is a unique code Spotify uses to identify your artist profile (different from your Client ID above).
 
 Open Spotify (app or spotify.com) and go to your own artist profile
+
 Click the "..." (three dots) → Share → Copy Link to Artist
+
 You'll get a link that looks like mine @jiandamonique:
    https://open.spotify.com/artist/4zgJ2DkzPUebzvG6LevAdR
+
 The long string after /artist/ — that's your Artist ID. You'll paste that in later too.
 
 Step 3: Run the script in Google Colab (or your tool of choice)
@@ -102,6 +113,7 @@ It says my redirect URL isn't secure — Use https://localhost:8888/callback or 
 Is this safe? Will Spotify disallow this?
 
 This uses Spotify's own official, public Developer API — the same one thousands of apps use. You're only pulling public catalog information (titles, links, UPCs, copyright lines, and so on) that's already visible to anyone on Spotify. Your Client ID/Secret never leave your own computer/browser except to talk directly to Spotify's login servers.
+
 If things change or elements are not available, it is likely Spotify made changes and improvements on their end. Feel free to let me know, we'll find a fix. :)
 
 Credit / Notes
