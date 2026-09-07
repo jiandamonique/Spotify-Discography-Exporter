@@ -22,7 +22,7 @@ For each song, you get:
 
 Think of it as making your own backup/master list of your Spotify catalog — with the same technical detail you'd want for licensing paperwork or a distributor migration, not just titles and links.
 
-**Want to skip the code entirely?** If you'd rather not touch GitHub, Colab, or anything code-related, there's a point-and-click version of this same tool: [artisanalindie.com/spotify-exporter.html](https://www.artisanalindie.com/spotify-exporter.html). Paste your artist link, get your CSV — same fields as below, no setup beyond the same one-time Client ID/Secret step.
+**Want to skip the code entirely?** If you'd rather not touch GitHub, Colab, or anything code-related, there's a point-and-click version of this same tool: [www.curateindie.com/spotify-exporter.html](https://www.curateindie.com/spotify-exporter.html). Paste your artist link, get your CSV — same fields as below, no setup beyond the same one-time Client ID/Secret step.
 
 A note on scope: this pulls everything Spotify's own API provides about your catalog. Things Spotify has no way of knowing — songwriter splits, BPM, musical key, sample clearances, lyrics status, whether you kept the stems — aren't in here, because that data doesn't live on Spotify. You'd still track those yourself, alongside this tool's output.
 
